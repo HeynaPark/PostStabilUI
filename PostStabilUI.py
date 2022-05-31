@@ -25,8 +25,10 @@ class MyWindow(QMainWindow, ui):
         
         self.file = None
         self.fps = 30
-        self.startFrame = 0
         self.json_data = []
+        self.startFrame = 0
+        
+        
         
         self.ShowList()
         
@@ -57,9 +59,15 @@ class MyWindow(QMainWindow, ui):
 
 
     def Open(self):
+        
         file_name,_ = QFileDialog.getOpenFileName(self,
-                            "Open Video File",'','"All File(*)')
-        self.file =file_name
+                            "Open Video File",'','"Videos (*.mp4)')
+        self.file = file_name
+        
+        json_file = os.path.splitext(file_name)[0]+'.json'
+        print(json_file)
+        self.ParseJson(json_file)
+       
         self.filename.setText(self.file)    
         self.Preview()
         
@@ -108,11 +116,24 @@ class MyWindow(QMainWindow, ui):
             
     def RoiDraw(self):
         self.Pause()
-        position = self.fps*120
+        position = self.fps*self.startFrame
         self.mediaPlayer.setPosition(position)
+        self.CreateMarker()
 
-    def ParseJson(self):
-        pass
+    def CreateMarker(self):
+        bookmark = self(self.video_slider.value(),self)
+        bookmark.show()
+    
+    def ParseJson(self, jsonfile):
+        file = open(jsonfile)
+        json_data = json.load(file)
+        
+        for i in range(len(json_data['swipeperiod'])):
+            print(i)
+            self.startFrame = json_data['swipeperiod'][i]['start']
+            self.index_list.addItem("Swipe "+str(i+1))
+        print(self.startFrame)
+        
         
 
 if __name__ == "__main__":
