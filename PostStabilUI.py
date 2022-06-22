@@ -6,8 +6,6 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-#from PyQt5.QtMultimedia import QMediaContent, QMediaPlayer
-#from PyQt5.QtMultimediaWidgets import QVideoWidget, QGraphicsVideoItem
 from PyQt5.QtMultimediaWidgets import *
 from PyQt5.QtMultimedia import *
 
@@ -33,62 +31,53 @@ class MyWindow(QMainWindow, ui):
         self.json_file = ""
         self.fps = 30
         self.json_data = []
-        self.json_new_data =[]
         self.startFrame = 0
-        self.start = QPointF()
-        self.end = QPointF()
-        self.items = []
         self.roi_left = 0
         self.roi_top = 0
         self.roi_width = 0
         self.roi_height = 0
-
+        self.selected  = ""
+        self.idx = 0
 
         self.ShowList()
-        
         self.pb_import.clicked.connect(self.Open)
    
-
         self.view = CView(self)
         self.lay.addWidget(self.view)
     
-
         self.pb_play.setIcon(self.style().standardIcon(QStyle.SP_MediaPlay))
-        self.pb_play.clicked.connect(self.view.play)
-
+        self.pb_play.clicked.connect(self.play)
         self.pb_pause.setIcon(self.style().standardIcon(QStyle.SP_MediaPause))
         self.pb_pause.clicked.connect(self.view.pause)
-
         self.pb_stop.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
         self.pb_stop.clicked.connect(self.view.stop)
-        
-        self.video_slider.sliderMoved.connect(self.view.setPosition)
-        
+         
         self.pb_draw.clicked.connect(self.drawROI)
-        self.pb_delete.clicked.connect(self.clearROI)
-        self.pb_delete.clicked.connect(self.view.clearROI)
+        self.pb_ok.clicked.connect(self.saveROI)
         self.pb_send.clicked.connect(self.send)
         self.pb_stabil.clicked.connect(self.calcStabil)
         
-        self.status.addItem("Import Video file(.mp4) ====> click [Video Import]")
+        self.status.addItem("Import Video file(.mp4), First!]")
         self.status.setAlternatingRowColors(True)
         self.status.setDragEnabled(True)
-        
-   
+       
+        self.video_slider.sliderMoved.connect(self.view.setPosition)
+        self.video_slider.sliderMoved.connect(self.view.setPosition)
+        self.view.mediaPlayer.positionChanged.connect(self.positionChanged)
+        self.view.mediaPlayer.durationChanged.connect(self.durationChanged)
 
     def Open(self):
-        
         self.index_list.clear()
-        
+
         file_name,_ = QFileDialog.getOpenFileName(self,
                             "Open Video File",'','"Videos (*.mp4)')
         self.file = file_name
         
         if self.file!='':
             self.json_file = os.path.splitext(file_name)[0]+'.json'
-            self.view.play(self.file)
             self.ParseJson()
-  
+            print(self.json_file)
+
         self.filename.setText(self.file)
         self.status.addItem("[File]  "+ self.file)   
        
@@ -102,101 +91,76 @@ class MyWindow(QMainWindow, ui):
             if os.path.splitext(file)[1]=='.json':
                 self.listwidget.addItem(file)
             
+    def play(self):
+        if(self.file==''):
+            self.status.addItem("Open file, first!")
+        else:
+            self.view.play(self.file)
 
-    def PositionChanged(self,position):
+    def positionChanged(self, position):
         self.video_slider.setValue(position)
     
+    def durationChanged(self, duration):
+        self.video_slider.setRange(0,duration)
 
-    
-    def mousePressEvent(self, event):
-        if event.buttons() == Qt.LeftButton:
-            
-            self.start = event.pos()
-            self.end = event.pos()
-            self.lb_pos.setText(self.view.txt)
-        
- 
-    
-    def mouseMoveEvent(self, event):
-
-        
-        if event.buttons() == Qt.LeftButton:
-            self.end = event.pos()
-            
-            if len(self.items)>0:
-                # self.gScene.removeItem(self.items[-1])
-                del(self.items[-1])
-                
-            rect = QRectF(self.start, self.end)
-            pen = QPen(Qt.green)
-            green20 = QColor(Qt.green)
-            green20.setAlphaF(0.2)
-            brush = QBrush(green20)
-   
     def mouseReleaseEvent(self, event):
         self.status.scrollToBottom()
 
-    
     #draw event        
     def drawROI(self):
         if self.file!='':
             if self.startFrame==0:
                 print("[warning] Check Json file. ")
+
+            self.view.clearROI()
+            self.idx  = self.index_list.row(self.index_list.currentItem())
+            self.startFrame = self.json_data['swipeperiod'][self.idx]['start']
+            print(self.index_list.row(self.index_list.currentItem()))
+            
             position = self.fps*self.startFrame
             self.view.drawROI(position)
-            #self.view.viewFrame(self.file)
-        else:
-            self.status.addItem("Select Video First !")
-            self.status.scrollToBottom()
-      #  self.rectitem = QGraphicsRectItem(self.videoitem)
-        
-    def clearROI(self):
-        if self.file!='':
-            pass
-        else:
-            self.status.addItem("Select Video First !")
-            self.status.scrollToBottom()
-        
 
+        else:
+            self.status.addItem("Select Video First !")
+            self.status.scrollToBottom()     
+        
+    def saveROI(self):
+            self.roi_left = self.view.start.x()*self.view.ratio
+            self.roi_top = self.view.start.y()*self.view.ratio
+            self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
+            self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
+            
+            self.json_data['swipeperiod'][self.idx]['roi_left'] = self.roi_left
+            self.json_data['swipeperiod'][self.idx]['roi_top'] = self.roi_top
+            self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
+            self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
+            
+            self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
+            self.status.addItem(" left , top    : {0},{1}".format(self.roi_left,self.roi_top))    
+            self.status.addItem(" width, height : {0},{1}".format(self.roi_width, self.roi_height))
+            self.status.scrollToBottom()  
         
     def send(self):
-       # if self.file != '':
         self.roi_left = self.view.start.x()*self.view.ratio
         self.roi_top = self.view.start.y()*self.view.ratio
         self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
-        self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
-        self.status.addItem(" left , top    : {0},{1}".format(self.roi_left,self.roi_top))    
-        self.status.addItem(" width, height : {0},{1}".format(self.roi_width, self.roi_height))    
+        self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio 
         self.status.scrollToBottom()
-        self.saveNewJson()
-        
+        self.saveNewJson()   
         self.ShowList()
-        # else:
-        #     self.status.addItem("Select Video First !")
-        #     self.status.scrollToBottom()
-       
+
     def saveNewJson(self):
         try:
             json_data = self.json_data
-            for i in range(len(json_data['swipeperiod'])):
-                json_data['swipeperiod'][i]['roi_left'] = self.roi_left
-                json_data['swipeperiod'][i]['roi_top'] = self.roi_top
-                json_data['swipeperiod'][i]['roi_width'] = self.roi_width
-                json_data['swipeperiod'][i]['roi_height'] = self.roi_height
-            
             data = json.dumps(json_data,indent=4)
-        
-            
-            
+ 
             FileSave, _=QFileDialog.getSaveFileName(self, ' Save json file',  '.json')
             file = open(FileSave,'w')
             file.write(data)
             file.close()
             
             self.status.addItem("New JSON file was saved. ")
-            self.status.scrollToBottom()
-            
-            
+            self.status.scrollToBottom() 
         except:
             self.status.addItem("[warning] Check the JSON file. (json file name = video file name)")
             self.status.scrollToBottom()
@@ -206,22 +170,22 @@ class MyWindow(QMainWindow, ui):
             file = open(self.json_file)
             json_data = json.load(file)
             self.json_data = json_data
+            sf = []
+            swipe=''
             
             for i in range(len(json_data['swipeperiod'])):
                 self.index_list.addItem("Swipe "+str(i+1))
-                self.status.addItem("start frame is "+str(self.startFrame)+"    index : "+str(i))
                 self.status.scrollToBottom()
-                self.startFrame = json_data['swipeperiod'][i]['start']
-            print(self.startFrame)
-            
+                swipe = json_data['swipeperiod'][i]['start']
+                self.status.addItem("start frame is "+str(swipe)+"    index : "+str(i))
         except:
             self.status.addItem("[warning] Check the JSON file. (json file name = video file name)")
             self.status.scrollToBottom()
     
     def calcStabil(self):
-        
         try :
             selected = self.listwidget.currentItem().text()
+            print(selected)
             try:
                 subprocess.run("CMd.exe "+selected)
                 self.status.addItem("Stabil Done.")
@@ -230,37 +194,22 @@ class MyWindow(QMainWindow, ui):
         except:
             self.status.addItem("Please Select the New Json file")
 
-    
-    def RoiClear(self):
-        pass 
-
-    def paintEvent(self,event):
-        pass
-
-
-    
-        
+  
 class CView(QGraphicsView):
     
     def __init__(self, parent):
         
         super(CView,self).__init__(parent)
         self.gScene = QGraphicsScene(self)
-        # self.gScene.setSceneRect(0,0,self.parent().videoWidget.width(),self.parent().videoWidget.height())
-        # pimg = QPixmap("frame.png")
-        
+    
         self.new_w = 1280
         self.new_h = 720
         self.ratio = 0
         self.vid_wid =0
         self.vid_hei = 0
         
-        # self.scaled_img = pimg.scaled(QSize(1280,720),Qt.KeepAspectRatio)
-        #self.gScene.addPixmap(scaled_img)
-        
         self.setAlignment(Qt.AlignTop|Qt.AlignLeft)
-    #    print(self.gScene.sceneRect().width())
-    
+
         self.items = []
         self.start = QPointF()
         self.end = QPointF()
@@ -269,65 +218,43 @@ class CView(QGraphicsView):
         self.txt = ""
         self.first = True
  
-        self.setRenderHint(QPainter.HighQualityAntialiasing)
-        
+        self.setRenderHint(QPainter.HighQualityAntialiasing)  
         self.mediaPlayer = QMediaPlayer(self, QMediaPlayer.VideoSurface)
-    #    self.videoWidget = QVideoWidget()
-        
-       
+    
         self.videoitem = QGraphicsVideoItem() 
         self.videoitem.setPos(0,0)
         self.videoitem.setSize(QSizeF(self.new_w,self.new_h))
         self.rectitem = QGraphicsRectItem(self.videoitem)
         self.setScene(self.gScene)
         self.gScene.addItem(self.videoitem)
-        self.parent().pb_play.clicked.connect(self.play)
-        self.mediaPlayer.positionChanged.connect(self.setPosition)
         self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
-
+       # self.mediaPlayer.durationChanged.connect(self.durationChanged)
     
-    # def viewFrame(self, file):
-    #     cap = cv2.VideoCapture(file)
-    #     fps = cap.get(cv2.CAP_PROP_FPS)
-    #     sleep_ms = int(np.round((1/fps)*500))
-        
-    #     self.gScene.addPixmap(file)    
-        
     def mousePressEvent(self, event):
-        if event.buttons() == Qt.LeftButton:
-            
+        if event.buttons() == Qt.LeftButton:      
             self.start = event.pos()
             self.end = event.pos()
-            txt = "(left, top) : {0} , {1} ".format(self.start.x(),self.start.y())
-            print(txt)
-            
-
-    
+ 
     def mouseMoveEvent(self, event):
         self.position = event.pos()
         
         if event.buttons() == Qt.LeftButton:
-            self.end = event.pos()
-            
+            self.end = event.pos()          
             if len(self.items)>0:
                 self.gScene.removeItem(self.items[-1])
-                del(self.items[-1])
-                
+                del(self.items[-1])          
             rect = QRectF(self.start, self.end)
             pen = QPen(Qt.green)
             green20 = QColor(Qt.green)
             green20.setAlphaF(0.2)
             brush = QBrush(green20)
-            self.items.append(self.gScene.addRect(rect,pen,brush))
-            
-            
+            self.items.append(self.gScene.addRect(rect,pen,brush))     
         
     def mousePos(self, event, ui):
         txt = "Position : {0} , {1} ".format(event.x(),event.y())
         ui.setText(txt)   
     
     def mouseReleaseEvent(self, event):
-
         if event.buttons() == Qt.LeftButton:
             self.items.clear()
             rect = QRect(self.start, self.end)
@@ -349,30 +276,25 @@ class CView(QGraphicsView):
                 self.mediaPlayer.play()
             
     def play(self, file):
-        self.file = file
-        if file!=False:
-            if self.first:
-                video = QMediaContent((QUrl.fromLocalFile(file)))   
-                
-                self.mediaPlayer.setVideoOutput(self.videoitem)
-                self.setScene(self.gScene)
-                #self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(file)))
-                self.mediaPlayer.setMedia(video)
-            
-            # self.fitInView(self.parent().videoWidget.rect(),Qt.KeepAspectRatio)
-                self.mediaPlayer.play()   
-                self.first = False
+        self.file = file  
+        if self.first:
+            video = QMediaContent((QUrl.fromLocalFile(file)))             
+            self.mediaPlayer.setVideoOutput(self.videoitem)
+            self.setScene(self.gScene)
+            self.mediaPlayer.setMedia(video)
 
-                vid = cv2.VideoCapture(file)
-                self.vid_wid = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
-                
-                self.ratio = self.vid_wid/self.new_w
-                print(self.ratio)
-            else:
-                self.mediaPlayer.play()
-                self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
+            self.mediaPlayer.play()   
+            self.first = False
+
+            vid = cv2.VideoCapture(file)
+            self.vid_wid = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+            
+            self.ratio = self.vid_wid/self.new_w
+            print(self.ratio)
         else:
-            pass
+            self.mediaPlayer.play()
+            self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
+
     
     def pause(self):
         self.mediaPlayer.pause() 
@@ -392,24 +314,19 @@ class CView(QGraphicsView):
         if len(self.items)>0:
             self.gScene.removeItem(self.items[-1])
             del(self.items[-1])
+    
+    def setPosition(self, position):
+        self.mediaPlayer.setPosition(position)
 
     def mediaStateChanged(self, state):
         if state == QMediaPlayer.PlayingState:
             pass
-
-    def updateView(self):
-        pass
-        # scene = self.scene()
-
-        # r = scene.sceneRect()
-        # print('rect :{0} {1} {2} {3}' .format(r.x(), r.y(), r.width(), r.height()))
-
-   
+    
         
     def showEvent(self, event):
         if not event.spontaneous():
             print('show event')
-            self.updateView()
+          
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
