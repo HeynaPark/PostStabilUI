@@ -57,7 +57,7 @@ class MyWindow(QMainWindow, ui):
         self.pb_send.clicked.connect(self.send)
         self.pb_stabil.clicked.connect(self.calcStabil)
         
-        self.status.addItem("Import Video file(.mp4), First!]")
+        self.status.addItem(">>Please Import Video file(.mp4), first")
         self.status.setAlternatingRowColors(True)
         self.status.setDragEnabled(True)
        
@@ -72,15 +72,17 @@ class MyWindow(QMainWindow, ui):
         file_name,_ = QFileDialog.getOpenFileName(self,
                             "Open Video File",'','"Videos (*.mp4)')
         self.file = file_name
-        
+        self.status.addItem("Opend video file : "+str(self.file))
+        self.play()
         if self.file!='':
             self.json_file = os.path.splitext(file_name)[0]+'.json'
+            self.status.addItem("Opend json file : "+str(self.json_file))
             self.ParseJson()
-            print(self.json_file)
-
+            self.status.scrollToBottom()
+        else:
+            self.status.addItem("[Warning] json file was not opend.")
         self.filename.setText(self.file)
-        self.status.addItem("[File]  "+ self.file)   
-       
+        
         
     def ShowList(self):
         self.listwidget.clear()
@@ -110,14 +112,18 @@ class MyWindow(QMainWindow, ui):
     def drawROI(self):
         if self.file!='':
             if self.startFrame==0:
-                print("[warning] Check Json file. ")
+                self.status.addItem("[warning] Check Json file. ")
 
             self.view.clearROI()
             self.idx  = self.index_list.row(self.index_list.currentItem())
             self.startFrame = self.json_data['swipeperiod'][self.idx]['start']
             print(self.index_list.row(self.index_list.currentItem()))
             
-            position = self.fps*self.startFrame
+            cap = cv2.VideoCapture(self.file)
+            self.fps = cap.get(cv2.CAP_PROP_FPS)
+            #self.fps = 15
+            print("fps : "+str(self.fps))
+            position = ((self.startFrame-1)*1000)/self.fps
             self.view.drawROI(position)
 
         else:
@@ -178,6 +184,7 @@ class MyWindow(QMainWindow, ui):
                 self.status.scrollToBottom()
                 swipe = json_data['swipeperiod'][i]['start']
                 self.status.addItem("start frame is "+str(swipe)+"    index : "+str(i))
+                self.status.scrollToBottom()
         except:
             self.status.addItem("[warning] Check the JSON file. (json file name = video file name)")
             self.status.scrollToBottom()
@@ -231,7 +238,7 @@ class CView(QGraphicsView):
        # self.mediaPlayer.durationChanged.connect(self.durationChanged)
     
     def mousePressEvent(self, event):
-        if event.buttons() == Qt.LeftButton:      
+        if event.buttons() == Qt.LeftButton:       
             self.start = event.pos()
             self.end = event.pos()
  
@@ -277,23 +284,37 @@ class CView(QGraphicsView):
             
     def play(self, file):
         self.file = file  
-        if self.first:
-            video = QMediaContent((QUrl.fromLocalFile(file)))             
-            self.mediaPlayer.setVideoOutput(self.videoitem)
-            self.setScene(self.gScene)
-            self.mediaPlayer.setMedia(video)
+        video = QMediaContent((QUrl.fromLocalFile(file)))             
+        self.mediaPlayer.setVideoOutput(self.videoitem)
+        self.setScene(self.gScene)
+        self.mediaPlayer.setMedia(video)
+        self.mediaPlayer.play()   
+        
+        vid = cv2.VideoCapture(file)
+        self.vid_wid = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+        
+        self.ratio = self.vid_wid/self.new_w
+        print(self.ratio)
+        
+        #self.mediaPlayer.play()
+        self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
+        # if self.first:
+        #     video = QMediaContent((QUrl.fromLocalFile(file)))             
+        #     self.mediaPlayer.setVideoOutput(self.videoitem)
+        #     self.setScene(self.gScene)
+        #     self.mediaPlayer.setMedia(video)
 
-            self.mediaPlayer.play()   
-            self.first = False
+        #     self.mediaPlayer.play()   
+        #     #self.first = False
 
-            vid = cv2.VideoCapture(file)
-            self.vid_wid = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
+        #     vid = cv2.VideoCapture(file)
+        #     self.vid_wid = vid.get(cv2.CAP_PROP_FRAME_WIDTH)
             
-            self.ratio = self.vid_wid/self.new_w
-            print(self.ratio)
-        else:
-            self.mediaPlayer.play()
-            self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
+        #     self.ratio = self.vid_wid/self.new_w
+        #     print(self.ratio)
+        # else:
+        #     self.mediaPlayer.play()
+        #     self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
 
     
     def pause(self):
@@ -334,3 +355,4 @@ if __name__ == "__main__":
     myWindow.showMaximized()
     myWindow.show()
     app.exec_()
+    
