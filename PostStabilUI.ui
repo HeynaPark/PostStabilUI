@@ -30,7 +30,7 @@
     <item row="0" column="0">
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,2,0,0,0,2,0,3,0,0">
+       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,2,0,0,0,0,0,2,0,3,0,0">
         <item>
          <spacer name="verticalSpacer">
           <property name="orientation">
@@ -56,7 +56,7 @@
           <property name="font">
            <font>
             <family>Arial</family>
-            <pointsize>10</pointsize>
+            <pointsize>9</pointsize>
             <weight>50</weight>
             <bold>false</bold>
            </font>
@@ -69,6 +69,25 @@
           </property>
           <property name="text">
            <string>Video Import</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="jsonname">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_json">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
+          <property name="text">
+           <string>Json Import</string>
           </property>
          </widget>
         </item>
@@ -87,6 +106,11 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
+          </property>
           <property name="title">
            <string>ROI setting</string>
           </property>
@@ -155,7 +179,7 @@
           <property name="font">
            <font>
             <family>Arial</family>
-            <pointsize>10</pointsize>
+            <pointsize>9</pointsize>
            </font>
           </property>
           <property name="text">
@@ -291,6 +315,11 @@
              </item>
              <item>
               <widget class="QListWidget" name="status">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                </font>
+               </property>
                <property name="movement">
                 <enum>QListView::Free</enum>
                </property>

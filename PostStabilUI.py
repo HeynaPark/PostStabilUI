@@ -41,6 +41,7 @@ class MyWindow(QMainWindow, ui):
 
         self.ShowList()
         self.pb_import.clicked.connect(self.Open)
+        self.pb_json.clicked.connect(self.openJson)
    
         self.view = CView(self)
         self.lay.addWidget(self.view)
@@ -57,7 +58,7 @@ class MyWindow(QMainWindow, ui):
         self.pb_send.clicked.connect(self.send)
         self.pb_stabil.clicked.connect(self.calcStabil)
         
-        self.status.addItem(">>Please Import Video file(.mp4), first")
+        self.status.addItem(">>Please import Video file(.mp4), first")
         self.status.setAlternatingRowColors(True)
         self.status.setDragEnabled(True)
        
@@ -67,21 +68,31 @@ class MyWindow(QMainWindow, ui):
         self.view.mediaPlayer.durationChanged.connect(self.durationChanged)
 
     def Open(self):
-        self.index_list.clear()
+        #self.index_list.clear()
 
         file_name,_ = QFileDialog.getOpenFileName(self,
-                            "Open Video File",'','"Videos (*.mp4)')
+                            "Open Video File",'','Videos (*.mp4)')
         self.file = file_name
         self.status.addItem("Opend video file : "+str(self.file))
         self.play()
-        if self.file!='':
-            self.json_file = os.path.splitext(file_name)[0]+'.json'
-            self.status.addItem("Opend json file : "+str(self.json_file))
-            self.ParseJson()
-            self.status.scrollToBottom()
-        else:
-            self.status.addItem("[Warning] json file was not opend.")
+        # if self.file!='':
+        #     self.json_file = os.path.splitext(file_name)[0]+'.json'
+        #     self.status.addItem("Opend json file : "+str(self.json_file))
+        #     self.ParseJson()
+        #     self.status.scrollToBottom()
+        # else:
+        #     self.status.addItem("[Warning] json file was not opend.")
         self.filename.setText(self.file)
+        self.status.addItem(">>Please import Json file(.json)")
+        
+    def openJson(self):
+        self.index_list.clear()
+        file_name,_ = QFileDialog.getOpenFileName(self,"Open JSON file",'','Json file (*.json)')    
+        self.json_file = file_name
+        self.status.addItem("Opend json file : "+str(self.json_file))
+        self.ParseJson()
+        self.status.scrollToBottom()
+        self.jsonname.setText(self.json_file)
         
         
     def ShowList(self):
@@ -123,7 +134,7 @@ class MyWindow(QMainWindow, ui):
             self.fps = cap.get(cv2.CAP_PROP_FPS)
             #self.fps = 15
             print("fps : "+str(self.fps))
-            position = ((self.startFrame-1)*1000)/self.fps
+            position = ((self.startFrame)*1000)/self.fps  #position is (ms)
             self.view.drawROI(position)
 
         else:
@@ -141,9 +152,12 @@ class MyWindow(QMainWindow, ui):
             self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
             self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
             
+            self.json_data['input'] = self.file
+            self.json_data['output'] = os.path.splitext(self.file)[0]+str('_stabil_output.mp4')
+            
             self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
-            self.status.addItem(" left , top    : {0},{1}".format(self.roi_left,self.roi_top))    
-            self.status.addItem(" width, height : {0},{1}".format(self.roi_width, self.roi_height))
+            self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
+            self.status.addItem("   width, height :  {0} , {1}".format(self.roi_width, self.roi_height))
             self.status.scrollToBottom()  
         
     def send(self):
@@ -182,8 +196,9 @@ class MyWindow(QMainWindow, ui):
             for i in range(len(json_data['swipeperiod'])):
                 self.index_list.addItem("Swipe "+str(i+1))
                 self.status.scrollToBottom()
-                swipe = json_data['swipeperiod'][i]['start']
-                self.status.addItem("start frame is "+str(swipe)+"    index : "+str(i))
+                self.startFrame = json_data['swipeperiod'][i]['start']
+                swipe_end = json_data['swipeperiod'][i]['end']
+                self.status.addItem("   start frame: "+str(self.startFrame)+"      end frame: "+str(swipe_end)+"        index : "+str(i))
                 self.status.scrollToBottom()
         except:
             self.status.addItem("[warning] Check the JSON file. (json file name = video file name)")
@@ -196,8 +211,10 @@ class MyWindow(QMainWindow, ui):
             try:
                 subprocess.run("CMd.exe "+selected)
                 self.status.addItem("Stabil Done.")
+                self.status.scrollToBottom()
             except:
                 self.status.addItem("Stabil Failed.")
+                self.status.scrollToBottom()
         except:
             self.status.addItem("Please Select the New Json file")
 
@@ -224,13 +241,17 @@ class CView(QGraphicsView):
         self.position = QPointF()
         self.txt = ""
         self.first = True
- 
+
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setInteractive(False)
         self.setRenderHint(QPainter.HighQualityAntialiasing)  
         self.mediaPlayer = QMediaPlayer(self, QMediaPlayer.VideoSurface)
     
         self.videoitem = QGraphicsVideoItem() 
         self.videoitem.setPos(0,0)
         self.videoitem.setSize(QSizeF(self.new_w,self.new_h))
+        self.videoitem.setFlag(QGraphicsVideoItem.ItemIsMovable)
         self.rectitem = QGraphicsRectItem(self.videoitem)
         self.setScene(self.gScene)
         self.gScene.addItem(self.videoitem)
@@ -322,7 +343,9 @@ class CView(QGraphicsView):
         
     def stop(self):
         self.mediaPlayer.stop()
-        
+        self.videoitem.setPos(0,0)
+        self.setAlignment(Qt.AlignTop|Qt.AlignLeft)
+        self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
     def setPosition(self,position): 
         self.mediaPlayer.setPosition(position)    
       
