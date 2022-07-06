@@ -121,7 +121,7 @@ class MyWindow(QMainWindow, ui):
 
     #draw event        
     def drawROI(self):
-        if self.file!='':
+        if self.json_file!='' and self.file!='':
             if self.startFrame==0:
                 self.status.addItem("[warning] Check Json file. ")
 
@@ -138,7 +138,7 @@ class MyWindow(QMainWindow, ui):
             self.view.drawROI(position)
 
         else:
-            self.status.addItem("Select Video First !")
+            self.status.addItem("[Warning] Import Video and Json file !")
             self.status.scrollToBottom()     
         
     def saveROI(self):
@@ -153,7 +153,8 @@ class MyWindow(QMainWindow, ui):
             self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
             
             self.json_data['input'] = self.file
-            self.json_data['output'] = os.path.splitext(self.file)[0]+str('_stabil_output.mp4')
+            #jname = os.path.basename(self.json_file)
+            #self.json_data['output'] = os.path.splitext(self.file)[0]+"+"+os.path.splitext(jname)[0]+str("%02d")+str('_stabil_output.mp4')
             
             self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
             self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
@@ -171,10 +172,13 @@ class MyWindow(QMainWindow, ui):
 
     def saveNewJson(self):
         try:
+            FileSave, _=QFileDialog.getSaveFileName(self, ' Save json file',  '.json')
+            base = os.path.basename(FileSave)
+            fname = os.path.splitext(base)[0]
+            self.json_data['output'] = os.path.splitext(self.file)[0]+"+"+fname+str('_stabil_output.mp4')
             json_data = self.json_data
             data = json.dumps(json_data,indent=4)
  
-            FileSave, _=QFileDialog.getSaveFileName(self, ' Save json file',  '.json')
             file = open(FileSave,'w')
             file.write(data)
             file.close()
@@ -216,8 +220,8 @@ class MyWindow(QMainWindow, ui):
                 self.status.addItem("Stabil Failed.")
                 self.status.scrollToBottom()
         except:
-            self.status.addItem("Please Select the New Json file")
-
+            self.status.addItem("[Warning] Please Select the New Json file")
+            self.status.scrollToBottom() 
   
 class CView(QGraphicsView):
     
