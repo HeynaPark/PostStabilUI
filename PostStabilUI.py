@@ -15,6 +15,8 @@ import json
 import numpy as np
 from datetime import datetime
 import subprocess
+import math
+
 
 
 ui = uic.loadUiType("PostStabilUI.ui")[0]
@@ -25,8 +27,9 @@ class MyWindow(QMainWindow, ui):
         super(MyWindow,self).__init__(parent)
         
         self.setupUi(self)
-        self.setWindowTitle("Post Stabilization Program")
-   
+        self.setWindowTitle(" 4DReplay - Post Stabilize")
+        
+        
         self.file = ""
         self.json_file = ""
         self.fps = 30
@@ -52,26 +55,36 @@ class MyWindow(QMainWindow, ui):
         self.pb_pause.clicked.connect(self.view.pause)
         self.pb_stop.setIcon(self.style().standardIcon(QStyle.SP_MediaStop))
         self.pb_stop.clicked.connect(self.view.stop)
+        self.pb_reload.setIcon(self.style().standardIcon(QStyle.SP_BrowserReload))
+        self.pb_reload.clicked.connect(self.ShowList)
          
         self.pb_draw.clicked.connect(self.drawROI)
         self.pb_ok.clicked.connect(self.saveROI)
         self.pb_send.clicked.connect(self.send)
         self.pb_stabil.clicked.connect(self.calcStabil)
+        self.pb_frame.clicked.connect(self.calcStabilFrame)
+        self.pb_json2.clicked.connect(self.openJsonFolder)
+        self.index_list.itemSelectionChanged(self.saveTempROI)
         
         self.status.addItem(">>Please import Video file(.mp4), first")
-        self.status.setAlternatingRowColors(True)
+        #self.status.setAlternatingRowColors(True)
         self.status.setDragEnabled(True)
+
        
         self.video_slider.sliderMoved.connect(self.view.setPosition)
         self.video_slider.sliderMoved.connect(self.view.setPosition)
         self.view.mediaPlayer.positionChanged.connect(self.positionChanged)
         self.view.mediaPlayer.durationChanged.connect(self.durationChanged)
-
+        
+        #delete frame
+        self.pb_save.clicked.connect(self.saveFrame)
+        self.pb_clear.clicked.connect(self.clearFrame)
+        self.frame = 0
+        self.delete_frame = []
       
 
     def Open(self):
         #self.index_list.clear()
-
         file_name,_ = QFileDialog.getOpenFileName(self,
                             "Open Video File",'','Videos (*.mp4)')
         self.file = file_name
@@ -89,6 +102,16 @@ class MyWindow(QMainWindow, ui):
         self.ParseJson()
         self.status.scrollToBottom()
         self.jsonname.setText(self.json_file)
+        self.index_list.setCurrentRow(0)
+        
+    def openJsonFolder(self):
+        dirName = QFileDialog.getExistingDirectory(self, self.tr("Open Folder ", "./"))
+        self.listwidget.clear()
+        filelist = os.listdir(dirName)
+        
+        for file in filelist:
+            if os.path.splitext(file)[1]=='.json':
+                self.listwidget.addItem(file)
         
         
     def ShowList(self):
@@ -108,6 +131,8 @@ class MyWindow(QMainWindow, ui):
 
     def positionChanged(self, position):
         self.video_slider.setValue(position)
+        self.frame = math.trunc(self.view.frame)
+        self.lb_frame.setText(str(self.frame))
     
     def durationChanged(self, duration):
         self.video_slider.setRange(0,duration)
@@ -132,30 +157,64 @@ class MyWindow(QMainWindow, ui):
             print("fps : "+str(self.fps))
             position = ((self.startFrame)*1000)/self.fps  #position is (ms)
             self.view.drawROI(position)
-
+            self.view.fps = self.fps
+            
         else:
             self.status.addItem("[Warning] Import Video and Json file !")
             self.status.scrollToBottom()     
         
-    def saveROI(self):
-            self.roi_left = self.view.start.x()*self.view.ratio
-            self.roi_top = self.view.start.y()*self.view.ratio
-            self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
-            self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
-            
-            self.json_data['swipeperiod'][self.idx]['roi_left'] = self.roi_left
-            self.json_data['swipeperiod'][self.idx]['roi_top'] = self.roi_top
-            self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
-            self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
-            
-            self.json_data['input'] = self.file
-    
-            self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
-            self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
-            self.status.addItem("   width, height :  {0} , {1}".format(self.roi_width, self.roi_height))
-            self.status.scrollToBottom()  
+    def saveFrame(self):
+        self.delete_frame.append(self.frame)
+        self.delete_frame.sort()
+        self.lb_delete.setText(str(self.delete_frame))
+     
+    def clearFrame(self):
+        self.delete_frame = []
+        self.lb_delete.setText(str(self.delete_frame))   
         
+        
+    def saveROI(self):
+        self.roi_left = self.view.start.x()*self.view.ratio
+        self.roi_top = self.view.start.y()*self.view.ratio
+        self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
+        self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
+        
+        self.json_data['swipeperiod'][self.idx]['roi_left'] = self.roi_left
+        self.json_data['swipeperiod'][self.idx]['roi_top'] = self.roi_top
+        self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
+        self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
+                   
+        self.json_data['input'] = self.file
+
+        self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
+        self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
+        self.status.addItem("   width, height :  {0} , {1}".format(self.roi_width, self.roi_height))
+        self.status.scrollToBottom()  
+        
+        
+    def saveTempROI(self):
+        self.roi_left = self.view.start.x()*self.view.ratio
+        self.roi_top = self.view.start.y()*self.view.ratio
+        self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
+        self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
+        
+        self.json_data['swipeperiod'][self.idx]['roi_left'] = self.roi_left
+        self.json_data['swipeperiod'][self.idx]['roi_top'] = self.roi_top
+        self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
+        self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
+                   
+        self.json_data['input'] = self.file
+
+        self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
+        self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
+        self.status.addItem("   width, height :  {0} , {1}".format(self.roi_width, self.roi_height))
+        self.status.scrollToBottom()  
+        
+            
     def send(self):
+        
+        self.json_data['delete_frame'] = self.delete_frame
+        
         self.roi_left = self.view.start.x()*self.view.ratio
         self.roi_top = self.view.start.y()*self.view.ratio
         self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
@@ -166,10 +225,30 @@ class MyWindow(QMainWindow, ui):
 
     def saveNewJson(self):
         try:
+            #add
+            self.roi_left = self.view.start.x()*self.view.ratio
+            self.roi_top = self.view.start.y()*self.view.ratio
+            self.roi_width =(self.view.end.x()-self.view.start.x())*self.view.ratio
+            self.roi_height = (self.view.end.y()-self.view.start.y())*self.view.ratio
+            
+            self.json_data['swipeperiod'][self.idx]['roi_left'] = self.roi_left
+            self.json_data['swipeperiod'][self.idx]['roi_top'] = self.roi_top
+            self.json_data['swipeperiod'][self.idx]['roi_width'] = self.roi_width
+            self.json_data['swipeperiod'][self.idx]['roi_height'] = self.roi_height
+                       
+            self.json_data['input'] = self.file
+    
+            self.status.addItem("Saved "+str(self.index_list.currentItem().text()))
+            self.status.addItem("   left , top    :  {0} , {1}".format(self.roi_left,self.roi_top))    
+            self.status.addItem("   width, height :  {0} , {1}".format(self.roi_width, self.roi_height))
+            self.status.scrollToBottom()  
+            
+            
             FileSave, _=QFileDialog.getSaveFileName(self, ' Save json file',  '.json')
             base = os.path.basename(FileSave)
             fname = os.path.splitext(base)[0]
-            self.json_data['output'] = os.path.splitext(self.file)[0]+"+"+fname+str('_stabil_output.mp4')
+            #self.json_data['output'] = os.path.splitext(self.file)[0]+"+"+fname+str('_stabil.mp4')
+            self.json_data['output'] = os.path.splitext(self.file)[0]+str('_stabil.mp4')
             json_data = self.json_data
             data = json.dumps(json_data,indent=4)
  
@@ -205,10 +284,29 @@ class MyWindow(QMainWindow, ui):
     def calcStabil(self):
         try :
             selected = self.listwidget.currentItem().text()
+            file = open(selected)
+            json_data = json.load(file)
             print(selected)
             try:
                 subprocess.run("CMd.exe "+selected)
-                self.status.addItem("Stabil Done.")
+                self.status.addItem("Stabil Done    : "+ str(json_data['output']))
+                self.status.scrollToBottom()
+            except:
+                self.status.addItem("Stabil Failed.")
+                self.status.scrollToBottom()
+        except:
+            self.status.addItem("[Warning] Please Select the New Json file")
+            self.status.scrollToBottom() 
+            
+    def calcStabilFrame(self):
+        try :
+            selected = self.listwidget.currentItem().text()
+            file = open(selected)
+            json_data = json.load(file)
+            print(selected)
+            try:
+                subprocess.run("CMd_c.exe "+selected)
+                self.status.addItem("Stabil Done (crop ver)    : "+ str(json_data['output']))
                 self.status.scrollToBottom()
             except:
                 self.status.addItem("Stabil Failed.")
@@ -251,22 +349,22 @@ class CView(QGraphicsView):
         self.videoitem.setSize(QSizeF(self.new_w,self.new_h))
         self.videoitem.setFlag(QGraphicsVideoItem.ItemIsMovable)
         self.rectitem = QGraphicsRectItem(self.videoitem)
-        #self.lineitem = QGraphicsLineItem(self.videoitem)
+
         self.setScene(self.gScene)
         self.gScene.addItem(self.videoitem)
         self.mediaPlayer.stateChanged.connect(self.mediaStateChanged)
         
-     #   self.gScene.addLine(self.gScene.width/2,0,self.gScene.width/2,self.gScene.height)
-       # self.mediaPlayer.durationChanged.connect(self.durationChanged)
-
         line = QLineF(self.gScene.width()/2,0,self.gScene.width()/2,self.gScene.height())
         line2 = QLineF(0,self.gScene.height()/2,self.gScene.width(),self.gScene.height()/2)
         pen = QPen(Qt.black)
 
-        #self.items.append(self.gScene.addLine(self.gScene.width/2,0,self.gScene.width/2,self.gScene.height,pen,black,brush))  
         self.items.append(self.gScene.addLine(line,pen))  
         self.items.append(self.gScene.addLine(line2,pen))  
-
+        
+        #delete frame
+        self.fps = 0
+        self.frame = 0
+        
     def mousePressEvent(self, event):
         if event.buttons() == Qt.LeftButton:       
             self.start = event.pos()
@@ -334,6 +432,7 @@ class CView(QGraphicsView):
         self.videoitem.setPos(0,0)
         self.setAlignment(Qt.AlignTop|Qt.AlignLeft)
         self.fitInView(self.gScene.sceneRect(),Qt.KeepAspectRatio)
+    
     def setPosition(self,position): 
         self.mediaPlayer.setPosition(position)    
       
@@ -349,6 +448,11 @@ class CView(QGraphicsView):
     
     def setPosition(self, position):
         self.mediaPlayer.setPosition(position)
+        ##
+        frame = position * self.fps /1000
+        self.frame = frame + 1
+        #print(" frame : "+str(frame))
+        
 
     def mediaStateChanged(self, state):
         if state == QMediaPlayer.PlayingState:
@@ -360,8 +464,21 @@ class CView(QGraphicsView):
             print('show event')
           
 
+CSS = """
+        video_slider::handle::horizontal{
+            background: red;
+            border: 1px solid #565a5e;
+            width: 24px;
+            height: 8px;
+        }
+        
+        """
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app_icon = QIcon("logo.png")
+    app.setWindowIcon(app_icon)
+    #app.setStyleSheet(CSS)
     myWindow = MyWindow()
     myWindow.showMaximized()
     myWindow.show()

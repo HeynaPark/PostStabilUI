@@ -19,6 +19,11 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(31, 31, 31);
+color: rgb(104, 104, 104);
+</string>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -26,33 +31,52 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="2,6">
     <item row="0" column="0">
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,2,0,0,0,0,0,2,0,3,0,0">
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="filename">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,3">
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="filename">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="jsonname">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QPushButton" name="pb_import">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <family>Arial</family>
@@ -67,113 +91,303 @@
           <property name="toolTip">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; color:#5555ff;&quot;&gt;&lt;br/&gt;Video Import&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+          </property>
           <property name="text">
            <string>Video Import</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="jsonname">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="pb_json">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <family>Arial</family>
            </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
           </property>
           <property name="text">
            <string>Json Import</string>
           </property>
          </widget>
         </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-           </font>
-          </property>
-          <property name="title">
-           <string>ROI setting</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="0">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
-             <item>
-              <widget class="QPushButton" name="pb_draw">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                </font>
-               </property>
-               <property name="text">
-                <string>Draw</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pb_ok">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                </font>
-               </property>
-               <property name="text">
-                <string>Save ROI</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pb_send">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                </font>
-               </property>
-               <property name="text">
-                <string>Send</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
+       </layout>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color : #ffffff</string>
+        </property>
+        <property name="title">
+         <string>ROI setting</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_2">
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QPushButton" name="pb_draw">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Draw</string>
+             </property>
+            </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QListWidget" name="index_list"/>
+           <item>
+            <widget class="QPushButton" name="pb_ok">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Save ROI</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_send">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Save Json</string>
+             </property>
+            </widget>
            </item>
           </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
+         </item>
+         <item row="0" column="0">
+          <widget class="QListWidget" name="index_list">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(25, 25, 25);</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">color : #ffffff</string>
+        </property>
+        <property name="title">
+         <string>Delete Frame</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="4" column="0">
+          <widget class="QLabel" name="lb_delete">
+           <property name="text">
+            <string>delete frame</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lb_frame">
+           <property name="text">
+            <string>frame </string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QPushButton" name="pb_save">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Save</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_clear">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
          <widget class="QPushButton" name="pb_stabil">
           <property name="font">
@@ -182,31 +396,111 @@
             <pointsize>9</pointsize>
            </font>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+          </property>
           <property name="text">
            <string>Post Stabil</string>
           </property>
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+         <widget class="QPushButton" name="pb_frame">
+          <property name="font">
+           <font>
+            <family>Arial</family>
+           </font>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
           </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QListWidget" name="listwidget"/>
-        </item>
-        <item>
-         <widget class="QLabel" name="lb_pos">
           <property name="text">
-           <string/>
+           <string>Delete Frame</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="lb_pos">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,7,1">
+        <item>
+         <widget class="QPushButton" name="pb_json2">
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+          </property>
+          <property name="text">
+           <string>OpenFolder</string>
           </property>
          </widget>
         </item>
@@ -223,114 +517,241 @@
           </property>
          </spacer>
         </item>
-       </layout>
-      </item>
-      <item row="0" column="1">
-       <layout class="QVBoxLayout" name="layout_view" stretch="1">
         <item>
-         <widget class="QVideoWidget" name="viewer" native="true">
-          <property name="focusPolicy">
-           <enum>Qt::StrongFocus</enum>
+         <widget class="QPushButton" name="pb_reload">
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
           </property>
-          <layout class="QFormLayout" name="formLayout_2">
-           <item row="0" column="0" colspan="2">
-            <widget class="QLabel" name="drawlb">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <layout class="QVBoxLayout" name="verticalLayout" stretch="5,0,1,1">
-             <item>
-              <layout class="QVBoxLayout" name="lay">
-               <item>
-                <widget class="QVideoWidget" name="videoWidget" native="true"/>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QSlider" name="video_slider">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout">
-               <item>
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pb_play">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pb_pause">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pb_stop">
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_6">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QListWidget" name="status">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                </font>
-               </property>
-               <property name="movement">
-                <enum>QListView::Free</enum>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
+          <property name="text">
+           <string/>
+          </property>
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QListWidget" name="listwidget">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(25, 25, 25);
+color: rgb(255, 255, 255);
+selection-background-color: rgb(62, 62, 62);</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="1">
+     <layout class="QVBoxLayout" name="layout_view" stretch="0">
+      <item>
+       <widget class="QVideoWidget" name="viewer" native="true">
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <layout class="QFormLayout" name="formLayout_2">
+         <item row="0" column="0" colspan="2">
+          <widget class="QLabel" name="drawlb">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QVBoxLayout" name="verticalLayout" stretch="5,0,1,1">
+           <item>
+            <layout class="QVBoxLayout" name="lay">
+             <item>
+              <widget class="QVideoWidget" name="videoWidget" native="true"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QSlider" name="video_slider">
+             <property name="styleSheet">
+              <string notr="true">QSlider::groove:horizontal {
+border: -7px solid #999999;
+height: 20px;
+
+border-radius:5px;
+}
+
+QSlider::handle:horizontal {
+width: 18px;
+height: 30px;
+background: black;
+}
+
+QSlider::add-page:qlineargradient {
+background: lightgrey;
+border-top-right-radius: 9px;
+border-bottom-right-radius: 9px;
+border-top-left-radius: 0px;
+border-bottom-left-radius: 0px;
+}
+
+QSlider::sub-page:qlineargradient {
+background: red;
+border-top-right-radius: 0px;
+border-bottom-right-radius: 0px;
+border-top-left-radius: 9px;
+border-bottom-left-radius: 9px;
+}</string>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_play">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton{background-color: rgb(115, 115, 115);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_pause">
+               <property name="styleSheet">
+                <string notr="true">QPushButton{background-color: rgb(115, 115, 115);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pb_stop">
+               <property name="styleSheet">
+                <string notr="true">QPushButton{background-color:rgb(115, 115, 115);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="QListWidget" name="status">
+             <property name="font">
+              <font>
+               <family>Arial</family>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(25, 25, 25);
+color: rgb(255, 255, 255);
+border-color: rgb(200, 200, 200);</string>
+             </property>
+             <property name="movement">
+              <enum>QListView::Free</enum>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>
@@ -342,7 +763,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
@@ -358,9 +779,7 @@
  </customwidgets>
  <tabstops>
   <tabstop>pb_draw</tabstop>
-  <tabstop>pb_stabil</tabstop>
   <tabstop>pb_send</tabstop>
-  <tabstop>viewer</tabstop>
   <tabstop>index_list</tabstop>
   <tabstop>pb_ok</tabstop>
   <tabstop>pb_stop</tabstop>
