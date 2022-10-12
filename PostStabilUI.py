@@ -64,7 +64,7 @@ class MyWindow(QMainWindow, ui):
         self.pb_stabil.clicked.connect(self.calcStabil)
         self.pb_frame.clicked.connect(self.calcStabilFrame)
         self.pb_json2.clicked.connect(self.openJsonFolder)
-        self.index_list.itemSelectionChanged(self.saveTempROI)
+        #self.index_list.itemSelectionChanged(self.saveTempROI)
         
         self.status.addItem(">>Please import Video file(.mp4), first")
         #self.status.setAlternatingRowColors(True)
@@ -288,7 +288,7 @@ class MyWindow(QMainWindow, ui):
             json_data = json.load(file)
             print(selected)
             try:
-                subprocess.run("CMd.exe "+selected)
+                subprocess.run("CMd/CMd.exe "+selected)
                 self.status.addItem("Stabil Done    : "+ str(json_data['output']))
                 self.status.scrollToBottom()
             except:
@@ -305,7 +305,7 @@ class MyWindow(QMainWindow, ui):
             json_data = json.load(file)
             print(selected)
             try:
-                subprocess.run("CMd_c.exe "+selected)
+                subprocess.run("CMd/CMd_c.exe "+selected)
                 self.status.addItem("Stabil Done (crop ver)    : "+ str(json_data['output']))
                 self.status.scrollToBottom()
             except:
