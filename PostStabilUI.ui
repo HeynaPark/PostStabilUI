@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1920</width>
-    <height>1080</height>
+    <height>1095</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -31,9 +31,9 @@ color: rgb(104, 104, 104);
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <layout class="QGridLayout" name="gridLayout" columnstretch="2,6">
+   <layout class="QGridLayout" name="gridLayout_4" columnstretch="2,5">
     <item row="0" column="0">
-     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,3">
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0,0,0,0,0,0,0,0,0,3">
       <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
@@ -171,6 +171,199 @@ QPushButton:hover
        <layout class="QVBoxLayout" name="verticalLayout_3"/>
       </item>
       <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="styleSheet">
+         <string notr="true">color : #ffffff</string>
+        </property>
+        <property name="title">
+         <string>Add Swipe</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="0">
+          <widget class="QPushButton" name="pb_saves">
+           <property name="styleSheet">
+            <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+           </property>
+           <property name="text">
+            <string>Save new swipe</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QSpinBox" name="spinBox"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_start">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(65, 65, 65);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>START</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lb_start">
+             <property name="text">
+              <string>Start</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_end">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(65, 65, 65);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>END</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="lb_end">
+             <property name="text">
+              <string>End</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lb_frame">
+           <property name="text">
+            <string>frame </string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">color : #ffffff</string>
+        </property>
+        <property name="title">
+         <string>Delete Frame</string>
+        </property>
+        <layout class="QGridLayout" name="gridLayout_3">
+         <item row="1" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="1,1">
+           <item>
+            <widget class="QPushButton" name="pb_save">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Save delete frame</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pb_clear">
+             <property name="styleSheet">
+              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+             </property>
+             <property name="text">
+              <string>Clear</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lb_delete">
+           <property name="text">
+            <string>delete frame</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBox_2">
         <property name="font">
          <font>
@@ -213,43 +406,12 @@ QPushButton:hover
 }</string>
              </property>
              <property name="text">
-              <string>Draw</string>
+              <string>Draw ROI</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pb_ok">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
-selection-color: rgb(255, 255, 255);
-color: rgb(255, 255, 255);
-
-border: 1px solid  #ffffff;
-border-radius: 3px;
-padding-right: 5px; 
-padding-left: 5px;
-padding-top: 5px;
-padding-bottom: 5px;
-}
-
-QPushButton:hover
-{
-	background-color: rgb(125,125,125);
-	border: 0px solid  #ffffff;
-}</string>
-             </property>
-             <property name="text">
-              <string>Save ROI</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pb_send">
+            <widget class="QPushButton" name="pb_savej">
              <property name="font">
               <font>
                <family>Arial</family>
@@ -288,83 +450,64 @@ QPushButton:hover
            </property>
           </widget>
          </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="styleSheet">
-         <string notr="true">color : #ffffff</string>
-        </property>
-        <property name="title">
-         <string>Delete Frame</string>
-        </property>
-        <layout class="QGridLayout" name="gridLayout_3">
-         <item row="4" column="0">
-          <widget class="QLabel" name="lb_delete">
-           <property name="text">
-            <string>delete frame</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lb_frame">
-           <property name="text">
-            <string>frame </string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item row="2" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
            <item>
-            <widget class="QPushButton" name="pb_save">
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
-selection-color: rgb(255, 255, 255);
-color: rgb(255, 255, 255);
-
-border: 1px solid  #ffffff;
-border-radius: 3px;
-padding-right: 5px; 
-padding-left: 5px;
-padding-top: 5px;
-padding-bottom: 5px;
-}
-
-QPushButton:hover
-{
-	background-color: rgb(125,125,125);
-	border: 0px solid  #ffffff;
-}</string>
-             </property>
-             <property name="text">
-              <string>Save</string>
-             </property>
-            </widget>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Left</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Top</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Width</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Height</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <widget class="QLineEdit" name="le_left"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_top"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_wid"/>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_hei"/>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QPushButton" name="pb_clear">
-             <property name="styleSheet">
-              <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
-selection-color: rgb(255, 255, 255);
-color: rgb(255, 255, 255);
-
-border: 1px solid  #ffffff;
-border-radius: 3px;
-padding-right: 5px; 
-padding-left: 5px;
-padding-top: 5px;
-padding-bottom: 5px;
-}
-
-QPushButton:hover
-{
-	background-color: rgb(125,125,125);
-	border: 0px solid  #ffffff;
-}</string>
-             </property>
+            <widget class="QPushButton" name="pb_roi">
              <property name="text">
-              <string>Clear</string>
+              <string>ROI</string>
              </property>
             </widget>
            </item>
@@ -382,6 +525,19 @@ QPushButton:hover
          <size>
           <width>40</width>
           <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
          </size>
         </property>
        </spacer>
@@ -452,19 +608,6 @@ QPushButton:hover
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QLabel" name="lb_pos">
@@ -577,16 +720,17 @@ selection-background-color: rgb(62, 62, 62);</string>
             <widget class="QSlider" name="video_slider">
              <property name="styleSheet">
               <string notr="true">QSlider::groove:horizontal {
-border: -7px solid #999999;
-height: 20px;
+border: -8px solid #999999;
+height: 24px;
 
 border-radius:5px;
 }
 
 QSlider::handle:horizontal {
-width: 18px;
-height: 30px;
+width: 20px;
+height: 40px;
 background: black;
+border: 1px solid #999999;
 }
 
 QSlider::add-page:qlineargradient {
@@ -779,9 +923,8 @@ border-color: rgb(200, 200, 200);</string>
  </customwidgets>
  <tabstops>
   <tabstop>pb_draw</tabstop>
-  <tabstop>pb_send</tabstop>
+  <tabstop>pb_savej</tabstop>
   <tabstop>index_list</tabstop>
-  <tabstop>pb_ok</tabstop>
   <tabstop>pb_stop</tabstop>
   <tabstop>pb_play</tabstop>
   <tabstop>pb_pause</tabstop>
