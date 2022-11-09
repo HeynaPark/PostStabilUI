@@ -577,6 +577,32 @@ QPushButton:hover
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="pb_yolo">
+          <property name="styleSheet">
+           <string notr="true">QPushButton{background-color: rgb(75, 75, 75);
+selection-color: rgb(255, 255, 255);
+color: rgb(255, 255, 255);
+
+border: 1px solid  #ffffff;
+border-radius: 3px;
+padding-right: 5px; 
+padding-left: 5px;
+padding-top: 5px;
+padding-bottom: 5px;
+}
+
+QPushButton:hover
+{
+	background-color: rgb(125,125,125);
+	border: 0px solid  #ffffff;
+}</string>
+          </property>
+          <property name="text">
+           <string>YOLO detect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="pb_frame">
           <property name="font">
            <font>

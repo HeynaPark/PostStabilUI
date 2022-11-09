@@ -76,7 +76,9 @@ class MyWindow(QMainWindow, ui):
         self.pb_savej.clicked.connect(self.saveNewJson)
         self.pb_stabil.clicked.connect(self.calcStabil)
         self.pb_frame.clicked.connect(self.calcStabilFrame)
+        self.pb_yolo.clicked.connect(self.calcStabilYOLO)
         self.pb_json2.clicked.connect(self.openJsonFolder)
+        
 
         self.status.addItem(
             "> Please import Video file(.mp4) or Select Json file. ")
@@ -181,7 +183,7 @@ class MyWindow(QMainWindow, ui):
             print(self.index_list.row(self.index_list.currentItem()))
 
             #self.fps = 15
-            print("fps : "+str(self.fps))
+            #print("fps : "+str(self.fps))
             position = ((self.startFrame)*1000)/self.fps  # position is (ms)
             self.view.setStartFrame(position)
             self.lb_frame.setText("frame: " + str(self.startFrame))
@@ -316,9 +318,8 @@ class MyWindow(QMainWindow, ui):
             print(selected)
 
             try:
-                #subprocess.run("CMd/CMd.exe "+selected)
-                subprocess.run(
-                    "D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
+                subprocess.run("CMd/CMd_10.exe "+selected)
+                #subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
                 self.status.addItem("Stabil Done    : " +
                                     str(json_data['output']))
                 self.status.scrollToBottom()
@@ -348,6 +349,24 @@ class MyWindow(QMainWindow, ui):
             self.status.addItem("[Warning] Please Select the New Json file")
             self.status.scrollToBottom()
 
+    def calcStabilYOLO(self):
+        try:
+            selected = self.listwidget.currentItem().text()
+            file = open(selected)
+            json_data = json.load(file)
+            print(selected)
+            try:
+                subprocess.run("CMd/CMd_YOLO.exe "+selected)
+                self.status.addItem(
+                    "Stabil Done (YOLO ver)    : " + str(json_data['output']))
+                self.status.scrollToBottom()
+            except:
+                self.status.addItem("Stabil Failed.")
+                self.status.scrollToBottom()
+        except:
+            self.status.addItem("[Warning] Please Select the New Json file")
+            self.status.scrollToBottom()
+    
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Space:
             print("space bar")
