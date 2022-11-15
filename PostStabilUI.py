@@ -161,7 +161,7 @@ class MyWindow(QMainWindow, ui):
 
     def positionChanged(self, position):
         self.video_slider.setValue(position)
-        self.frame = math.trunc(self.view.frame)
+        self.frame = round(self.view.frame)
         position = ((self.frame)*1000)/self.fps  # position is (ms)
         # self.view.setStartFrame(position)
         self.lb_frame.setText("frame: " + str(self.frame))
@@ -318,7 +318,8 @@ class MyWindow(QMainWindow, ui):
             print(selected)
 
             try:
-                subprocess.run("CMd/CMd_10.exe "+selected)
+                #subprocess.run("CMd/CMd_10.exe "+selected)
+                subprocess.run("CMd/CMd.exe "+selected)
                 #subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
                 self.status.addItem("Stabil Done    : " +
                                     str(json_data['output']))
@@ -357,6 +358,7 @@ class MyWindow(QMainWindow, ui):
             print(selected)
             try:
                 subprocess.run("CMd/CMd_YOLO.exe "+selected)
+                #subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
                 self.status.addItem(
                     "Stabil Done (YOLO ver)    : " + str(json_data['output']))
                 self.status.scrollToBottom()
