@@ -318,9 +318,9 @@ class MyWindow(QMainWindow, ui):
             print(selected)
 
             try:
-                #subprocess.run("CMd/CMd_10.exe "+selected)
-                subprocess.run("CMd/CMd.exe "+selected)
-                #subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
+                subprocess.run("CMd/CMd_10.exe "+selected)
+                #subprocess.run("CMd/CMd.exe "+selected)
+                #subprocess.run("D:/git_vespa/newvespa/appcore/x64/Release/CMd.exe "+selected)
                 self.status.addItem("Stabil Done    : " +
                                     str(json_data['output']))
                 self.status.scrollToBottom()
