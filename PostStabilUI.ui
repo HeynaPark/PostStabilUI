@@ -717,9 +717,10 @@ QPushButton:hover
       <item>
        <widget class="QListWidget" name="listwidget">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(25, 25, 25);
+         <string notr="true">background-color: rgb(55, 55, 55);
 color: rgb(255, 255, 255);
-selection-background-color: rgb(62, 62, 62);</string>
+selection-color: rgb(195, 195, 195);
+selection-background-color: rgb(162, 162, 162);</string>
         </property>
        </widget>
       </item>

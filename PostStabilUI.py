@@ -78,7 +78,6 @@ class MyWindow(QMainWindow, ui):
         self.pb_frame.clicked.connect(self.calcStabilFrame)
         self.pb_yolo.clicked.connect(self.calcStabilYOLO)
         self.pb_json2.clicked.connect(self.openJsonFolder)
-        
 
         self.status.addItem(
             "> Please import Video file(.mp4) or Select Json file. ")
@@ -180,10 +179,10 @@ class MyWindow(QMainWindow, ui):
             self.view.clearROI()
             self.idx = self.index_list.row(self.index_list.currentItem())
             self.startFrame = self.json_data['swipeperiod'][self.idx]['start']
-            print(self.index_list.row(self.index_list.currentItem()))
+            # print(self.index_list.row(self.index_list.currentItem()))
 
-            #self.fps = 15
-            #print("fps : "+str(self.fps))
+            # self.fps = 15
+            # print("fps : "+str(self.fps))
             position = ((self.startFrame)*1000)/self.fps  # position is (ms)
             self.view.setStartFrame(position)
             self.lb_frame.setText("frame: " + str(self.startFrame))
@@ -228,7 +227,7 @@ class MyWindow(QMainWindow, ui):
         self.newIdx = self.spinBox.value()
         # if self.newIdx == 0:
         #     self.json_data['swipeperiod'] = []
-        print(self.newIdx)
+        # print(self.newIdx)
         if (self.json_file != ""):
             self.json_data['swipeperiod'][self.newIdx]['start'] = self.startF
             self.json_data['swipeperiod'][self.newIdx]['end'] = self.endF
@@ -238,7 +237,7 @@ class MyWindow(QMainWindow, ui):
             self.status.addItem("   new start frame: "+str(self.startF) +
                                 "     new end frame: "+str(self.endF)+"        index : "+str(self.newIdx))
             self.status.scrollToBottom()
-            
+
             if (self.newIdx != (len(self.json_data['swipeperiod'])-1)):
                 self.spinBox.setValue(self.spinBox.value()+1)
         else:
@@ -252,22 +251,32 @@ class MyWindow(QMainWindow, ui):
             self.saveROI()
 
             self.json_data['input'] = self.file
-            self.json_data['output'] = os.path.splitext(
-                self.file)[0]+str('_stabil.mp4')
 
-            json_data = self.json_data
-            data = json.dumps(json_data, indent=4)
+            # self.json_data['output'] = os.path.splitext(self.file)[0]+str('_stabil.mp4')
+
             dir = os.getcwd()
             base = os.path.basename(self.file)
             fname = os.path.splitext(base)[0]
             uniq = 1
             newjson = dir + "/" + fname + str("_stabil.json")
+
+            print(dir)
+            print(fname)
+            print(base)
+            testPath = dir + "\checkTest\\" + fname + str("_stabil.mp4")
+            print(testPath)
+            self.json_data['output'] = testPath
+            # json_data = self.json_data
+
             while os.path.exists(newjson):
                 newjson = dir + "/" + fname + str("_stabil(%d).json") % (uniq)
                 uniq += 1
 
+            json_data = self.json_data
+            data = json.dumps(json_data, indent=4)
+
             file = open(newjson, 'w')
-            #file = open(FileSave,'w')
+            # file = open(FileSave,'w')
             file.write(data)
             file.close()
 
@@ -277,7 +286,7 @@ class MyWindow(QMainWindow, ui):
 
             newItem = QListWidgetItem()
             newItem.setText(addfile)
-            print(addfile)
+            # print(addfile)
             self.listwidget.insertItem(0, newItem)
             self.listwidget.setCurrentRow(0)
 
@@ -315,34 +324,17 @@ class MyWindow(QMainWindow, ui):
             selected = self.listwidget.currentItem().text()
             file = open(selected)
             json_data = json.load(file)
-            print(selected)
+            # print(selected)
 
             try:
-                subprocess.run("CMd/CMd_10.exe "+selected)
-                #subprocess.run("CMd/CMd.exe "+selected)
-                #subprocess.run("D:/git_vespa/newvespa/appcore/x64/Release/CMd.exe "+selected)
+                # subprocess.run("CMd/CMd_v4.1.2.1.exe "+selected)
+                # subprocess.run("CMd/CMd.exe "+selected)
+                subprocess.run("D:/v4_cmd/x64/Release/CMd_local.exe "+selected)
+                # subprocess.run("D:/git_vespa/newvespa/appcore/x64/Release/CMd_n.exe "+selected)
                 self.status.addItem("Stabil Done    : " +
                                     str(json_data['output']))
                 self.status.scrollToBottom()
 
-            except:
-                self.status.addItem("Stabil Failed.")
-                self.status.scrollToBottom()
-        except:
-            self.status.addItem("[Warning] Please Select the New Json file")
-            self.status.scrollToBottom()
-
-    def calcStabilFrame(self):
-        try:
-            selected = self.listwidget.currentItem().text()
-            file = open(selected)
-            json_data = json.load(file)
-            print(selected)
-            try:
-                subprocess.run("CMd/CMd_c.exe "+selected)
-                self.status.addItem(
-                    "Stabil Done (crop ver)    : " + str(json_data['output']))
-                self.status.scrollToBottom()
             except:
                 self.status.addItem("Stabil Failed.")
                 self.status.scrollToBottom()
@@ -355,10 +347,12 @@ class MyWindow(QMainWindow, ui):
             selected = self.listwidget.currentItem().text()
             file = open(selected)
             json_data = json.load(file)
-            print(selected)
+            # print(selected)
             try:
-                subprocess.run("CMd/CMd_YOLO.exe "+selected)
-                #subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
+                subprocess.run(
+                    "D:/git_vespa/newvespa/appcore/x64/Release/CMd_tracker.exe "+selected)
+                # subprocess.run("CMd/CMd_YOLO.exe "+selected)
+                # subprocess.run("D:/git/vespa/vespa/appcore/x64/Release/CMd.exe "+selected)
                 self.status.addItem(
                     "Stabil Done (YOLO ver)    : " + str(json_data['output']))
                 self.status.scrollToBottom()
@@ -368,7 +362,28 @@ class MyWindow(QMainWindow, ui):
         except:
             self.status.addItem("[Warning] Please Select the New Json file")
             self.status.scrollToBottom()
-    
+
+    def calcStabilFrame(self):
+        try:
+            selected = self.listwidget.currentItem().text()
+            file = open(selected)
+            json_data = json.load(file)
+            # print(selected)
+            try:
+                # subprocess.run("D:/v4_cmd/x64/Release/CMd.exe "+selected)
+                # subprocess.run("D:/git_vespa/newvespa/appcore/x64/Release/CMd.exe "+selected)
+                # subprocess.run("CMd/CMd_v4.1.2.2.exe "+selected)
+                subprocess.run("CMd/CMd_c.exe "+selected)
+                self.status.addItem(
+                    "Stabil Done (crop ver)    : " + str(json_data['output']))
+                self.status.scrollToBottom()
+            except:
+                self.status.addItem("Stabil Failed.")
+                self.status.scrollToBottom()
+        except:
+            self.status.addItem("[Warning] Please Select the New Json file")
+            self.status.scrollToBottom()
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Space:
             print("space bar")
@@ -387,7 +402,7 @@ class MyWindow(QMainWindow, ui):
 
     def saveStart(self):
         self.startF = self.frame
-        #self.startF = self.le_start.text()
+        # self.startF = self.le_start.text()
         # self.le_start.setText(str(self.startF))
         self.lb_start.setText(str(self.startF))
 
@@ -508,7 +523,7 @@ class CView(QGraphicsView):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Space:
-            print("space")
+            # print("space")
             if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
                 self.mediaPlayer.pause()
             else:
@@ -554,7 +569,7 @@ class CView(QGraphicsView):
         ##
         frame = position * self.fps / 1000
         self.frame = frame
-        #print(" frame : "+str(frame))
+        # print(" frame : "+str(frame))
 
     # def posToFrame(self, frame):
 
