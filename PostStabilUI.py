@@ -98,6 +98,10 @@ class MyWindow(QMainWindow, ui):
 
         self.checkDraw = False
 
+        # auto ROI
+        self.pb_preview.clicked.connect(self.preview_roi)
+        self.pb_detect.clicked.connect(self.detect_human)
+
     def Open(self):
         # self.index_list.clear()
         file_name, _ = QFileDialog.getOpenFileName(self,
@@ -179,10 +183,6 @@ class MyWindow(QMainWindow, ui):
             self.view.clearROI()
             self.idx = self.index_list.row(self.index_list.currentItem())
             self.startFrame = self.json_data['swipeperiod'][self.idx]['start']
-            # print(self.index_list.row(self.index_list.currentItem()))
-
-            # self.fps = 15
-            # print("fps : "+str(self.fps))
             position = ((self.startFrame)*1000)/self.fps  # position is (ms)
             self.view.setStartFrame(position)
             self.lb_frame.setText("frame: " + str(self.startFrame))
@@ -402,8 +402,6 @@ class MyWindow(QMainWindow, ui):
 
     def saveStart(self):
         self.startF = self.frame
-        # self.startF = self.le_start.text()
-        # self.le_start.setText(str(self.startF))
         self.lb_start.setText(str(self.startF))
 
     def saveEnd(self):
@@ -422,6 +420,59 @@ class MyWindow(QMainWindow, ui):
         self.json_data['swipeperiod'][self.idx]['roi_top'] = self.view.roi_top
         self.json_data['swipeperiod'][self.idx]['roi_width'] = self.view.roi_wid
         self.json_data['swipeperiod'][self.idx]['roi_height'] = self.view.roi_hei
+
+    def viewROI_input(self):
+        self.view.roi_left = self.json_data['swipeperiod'][self.idx]['roi_left'] / self.view.ratio
+        self.view.roi_top = self.json_data['swipeperiod'][self.idx]['roi_top'] / self.view.ratio
+        self.view.roi_wid = self.json_data['swipeperiod'][self.idx]['roi_width'] / self.view.ratio
+        self.view.roi_hei = self.json_data['swipeperiod'][self.idx]['roi_height'] / self.view.ratio
+        self.view.viewROI()
+
+    def preview_roi(self):
+        # 선택한 JSON의 start frame
+        self.listwidget.setCurrentRow(0)
+        self.json_file = self.listwidget.currentItem().text()
+        self.ParseJson()
+        video_file = self.json_data['input']
+        self.status.addItem(" preview open : " + str(video_file))
+
+        cap = cv2.VideoCapture(video_file)
+        self.fps = cap.get(cv2.CAP_PROP_FPS)
+        self.view.fps = self.fps
+
+        self.startFrame = self.json_data['swipeperiod'][self.idx]['start']
+        position = ((self.startFrame)*1000)/self.fps  # position is (ms)
+        print(self.startFrame)
+        print(self.fps)
+        self.view.play(video_file)
+        self.view.setStartFrame(position)
+        # 기존 ROI 보여주기
+        self.viewROI_input()
+
+        # start frame을 mat으로 저장
+        # frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        cap.set(cv2.CAP_PROP_POS_FRAMES, self.startFrame)
+
+        ret, self.img = cap.read()
+
+        cap.release()
+
+    def detect_human(self):
+        frame = self.img
+
+        # cv2.imwrite('start_frame.png', frame)
+
+        print(len(frame.shape))
+        human_cascade = cv2.CascadeClassifier('haarcascade_fullbody.xml')
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        humans = human_cascade.detectMultiScale(gray, 1.1, 4)
+
+        for (x, y, w, h) in humans:
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        cv2.imshow('test', frame)
+        cv2.waitKey(0)
 
 
 class CView(QGraphicsView):
@@ -566,14 +617,8 @@ class CView(QGraphicsView):
 
     def setPosition(self, position):
         self.mediaPlayer.setPosition(position)
-        ##
         frame = position * self.fps / 1000
         self.frame = frame
-        # print(" frame : "+str(frame))
-
-    # def posToFrame(self, frame):
-
-    #     frame = self.fps * self.mediaPlayer.getPosition() / 1000
 
     def mediaStateChanged(self, state):
         if state == QMediaPlayer.PlayingState:
