@@ -1,13 +1,18 @@
-# Video Stabilize Program for 4DReplay Korea
+# Stereo Video Stabilize Program
 
 > A project from 4DREPLAY
 
 
-![man1](https://user-images.githubusercontent.com/90448406/195235755-bd90b7df-614f-4cfd-b9e1-b463740f6023.gif)
-    ![man1_stabil_crop91](https://user-images.githubusercontent.com/90448406/195235679-70321eeb-19c0-4796-81b3-bb584fbc720d.gif)
+멀티 카메라 영상의 extrinc matrix 차이로 발생하는 흔들림을 완화합니다.
+
+![tennis](https://github.com/HeynaPark/PostStabilUI/assets/90448406/d596bd32-e1b9-4450-bcb4-1f0a10af09ec)
 
 
-멀티 카메라 영상의 extrinc matrix 차이로 발생하는 흔들림을(좌측) 완화(우측)합니다.
+
+
+---
+
+### UI program
 
 ![postStabilUI](https://github.com/HeynaPark/PostStabilUI/assets/90448406/c2065820-f501-4868-bd6a-d4956d8a91c2)
 
