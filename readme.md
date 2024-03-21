@@ -3,7 +3,7 @@
 > A project from 4DREPLAY
 
 
-멀티 카메라 영상의 extrinc matrix 차이로 발생하는 흔들림을 완화합니다.
+멀티 카메라 영상의 extrinsic matrix 차이로 발생하는 흔들림을 완화합니다.
 
 ![tennis](https://github.com/HeynaPark/PostStabilUI/assets/90448406/d596bd32-e1b9-4450-bcb4-1f0a10af09ec)
 
